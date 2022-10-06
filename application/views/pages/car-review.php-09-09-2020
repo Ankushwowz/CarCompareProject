@@ -1,0 +1,86 @@
+<style>
+.blog-one {padding: 50px 0;}
+.blog-one-item {margin-bottom: 0;}
+.searchdiv { background-color: #eee;margin-bottom: 20px;}
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {min-height: 1px;}
+.car_review {background: #eee;padding: 20px 30px 0;}
+</style>
+<div class="container blog-one">
+    <div class="row" >
+        <div class="col-md-2"></div>
+        <div class="col-md-8 searchdiv">
+            <form action="<?php echo base_url()?>car-review"  method="post">
+            	<div class="col-md-10 col-xs-10">
+            	<input type="text"  name="txtsearch" class="form-control" placeholder="Please enter  for search data"  value="<?php if(!empty($_POST['txtsearch'])) { echo $_POST['txtsearch']; }?>" >
+            	</div>
+            	<div class="col-md-2 col-xs-2">
+            	<input type="submit" class="btn btn-success" name="search" value="Search">
+            	</div>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <?php 
+    if(count($blogreview) >0){
+    foreach($blogreview as $blogreview){?>
+    
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 car_review">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+        					<!-- Blog item starts -->
+                            <div class="blog-one-item row">
+                                <!-- blog One Img -->
+                                <div class="blog-one-img col-md-3 col-sm-3 col-xs-12">
+                                    <!-- Image -->
+                                   
+        							<?php if(!empty($blogreview->featured_img)) {?>
+        									   <img src="<?php echo base_url()?>/assets/upload/gallary/<?php echo $blogreview->featured_img; ?>" class="img-responsive img-thumbnail">
+        									   <?php } else { ?>
+        									    <img src="<?php echo base_url()?>/assets/img/no-image.png" class="img-responsive img-thumbnail">
+        									   <?php } ?>
+                                </div>
+                                <!-- blog One Content -->
+                                <div class="blog-one-content  col-md-9 col-sm-9 col-xs-12">
+                                    <!-- Heading -->
+                                    <h3><a href="<?php echo base_url();?>car-single-review/<?php echo base64_encode($blogreview->id);?>"><?php if(!empty($blogreview->title)) { echo $blogreview->title;}?></a></h3>
+                                    <!-- Blog meta -->
+                                    <div class="blog-meta">
+                                        <!-- Date -->
+                                        <i class="fa fa-calendar"></i>  <?php if(!empty($blogreview->created_date)) { echo 
+        								date('D d F Y ', strtotime($blogreview->created_date));
+        								
+        								}?>  <!-- updated on version 1.6 -->
+                                        <!-- Author -->
+                                        <i class="fa fa-user"></i> <?php if(!empty($blogreview->first_name)) { echo ucfirst ($blogreview->first_name);}?>
+        
+                                    </div>
+                                    <!-- Paragraph -->
+                                    <p><?php if(!empty($blogreview->description)) { 
+									echo substr(strip_tags($blogreview->description),0,500) ;  } ?>
+									</p>
+									<?php if(!empty($blogreview->description)) { ?>
+										<a href="<?php echo base_url();?>car-single-review/<?php echo base64_encode($blogreview->id);?>"><button class="read_more"> Read More </button></a>
+									<?php } ?>
+                                </div>
+                            </div>
+                         
+        
+        
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+        <?php 
+    	
+        }
+        }else {?>
+        <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+        		    <h2 style="text-align:center;">No data found</h2>
+        		</div>
+        </div>
+        <?php } ?>
+</div>

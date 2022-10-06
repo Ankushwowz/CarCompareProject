@@ -1,0 +1,57 @@
+<style>
+.mt-10{margin-top:10px !important;}
+.mt-20{margin-top:20px !important;}
+</style>
+<div class="content-wrapper">
+   <!-- Content Header (Page header) -->
+   <section class="content-header">
+      <h1>
+         <i class="fa fa-users"></i>Edit Corporate User
+         <small></small>
+      </h1>
+   </section>
+   <section class="content">
+      
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="box admin-box">
+               <!-- /.box-header -->
+               <div class="box-body table-responsive">
+                    <?php 
+					$success = $this->session->flashdata('success');
+					if($success)
+					{
+						?>
+						<div class="alert alert-success alert-dismissable">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+							<?php echo $success; ?>                    
+						</div>
+					<?php } ?>
+                 <form action="<?php echo base_url();?>administrator/editcorporate/<?php echo $this->uri->segment(3);?>" method="post" role="form" novalidate=""  id="my_corporate_up">
+					<div class="row">
+					<div class="col-md-12">
+						   <label class="control-label mt-10">First Name <span class="text-danger">*</span></label>
+						   <input type="text" name="first_name" placeholder="First Name"  class="form-control" required="true" value="<?php if(!empty($users['first_name'])) { echo $users['first_name']; }?>">
+					</div>
+					<div class="col-md-12">
+							   <label class="control-label mt-10">Last Name<span class="text-danger">*</span><span class="text-danger">*</span></label>
+							   <input type="text" name="last_name" placeholder="Last Name"  class="form-control" required="true" value="<?php if(!empty($users['last_name'])) { echo $users['last_name']; }?>">
+					</div>
+					<div class="col-md-12">
+					   <label class="control-label mt-10">Email<span class="text-danger">*</span></label>
+					   <input type="text" name="useremail" placeholder="Email"  class="form-control" required="true" value="<?php if(!empty($users['user_email'])) { echo $users['user_email']; }?>">
+					</div>
+										
+					
+					<div class="col-md-12">
+						<input type="submit" name="submit" class="btn btn-success  mt-20" value="Save">
+					  </div>
+					</div>
+			   </form>
+               <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+         </div>
+      </div>
+   </section>
+</div>

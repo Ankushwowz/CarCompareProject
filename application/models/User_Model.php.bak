@@ -1,0 +1,99 @@
+<?php
+
+	class User_Model extends CI_Model
+	{
+		
+		protected $car_users = 'car_users';
+		protected $car_posts = 'car_posts';
+		protected $car_upload_images = 'car_upload_images';
+		public function __construct()
+		{
+			parent::__construct();
+			$this->load->database();
+			
+		}
+
+
+	
+	function userRegistration(){
+		parse_str($_POST['formdata'], $searcharray);
+		$browser_id =session_id();
+		$this->db->where('user_email',$searcharray['useremail'])->from($this->car_users);
+		$query = $this->db->get();
+		$num = $query->num_rows();
+		if($num >0){
+			return 1;
+			
+		}else{
+			$data = array(
+							'first_name' => $searcharray['first_name'],
+							'last_name' => $searcharray['last_name'],
+							'user_email' => $searcharray['useremail'],
+							'password' => md5($searcharray['password']),
+							'user_type' => 2,
+							'user_company' => $searcharray['company_name'],
+							'user_phone' => $searcharray['phone'],
+							'user_website' => $searcharray['website'],
+							'created_date' => date("Y-m-d H:i:s")
+						);
+						
+			$result = $this->db->insert($this->car_users, $data);
+			$lastID = $this->db->insert_id();
+			if($lastID){
+			if($searcharray['package_id']=='premium'){
+			$user_data = array(
+                'user_id' => $lastID,
+				'email' => $searcharray['useremail'],
+				'role' => 2
+            );
+			$this->session->set_userdata($user_data); 
+			}
+			}
+			
+			$updataPost = "update ".$this->car_posts." set user_id='".$lastID."' ,status=1 where browser_id='".$browser_id."' AND package='basic'";
+			$this->db->query($updataPost);
+			$updataGallary = "update ".$this->car_upload_images." set user_id='".$lastID."' where browser_id='".$browser_id."'";
+			$this->db->query($updataGallary);
+			return 2;
+		}
+		
+	}
+	
+	function userLogin(){
+		$browser_id =session_id();
+		parse_str($_POST['formdata'], $searcharray);
+		//$where =" (user_type= '2')";
+		$this->db->from($this->car_users);
+		$this->db->where('user_email',$searcharray['useremaillogin']);
+		$this->db->where('password',md5($searcharray['passwordlogin']));
+		//$this->db->where($where);
+		$query = $this->db->get();
+		$num = $query->num_rows();
+		if($num >0){
+			$user_id = $query->row_array();
+			 $user_data = array(
+                'user_id' => $user_id['id'],
+				'email' => $user_id['user_email'],
+				'role' => $user_id['user_type']
+        );
+          $this->session->set_userdata($user_data); 
+		  $updataPost = "update ".$this->car_posts." set user_id='".$user_id['id']."' ,status=1 where browser_id='".$browser_id."' AND package='basic'";
+			$this->db->query($updataPost);
+			$updataGallary = "update ".$this->car_upload_images." set user_id='".$user_id['id']."' where browser_id='".$browser_id."'";
+			$this->db->query($updataGallary);
+		  
+		  
+		  
+			return 1;
+			
+		}else{
+			
+			return 2;
+		}
+		
+	}
+		
+
+
+	
+}

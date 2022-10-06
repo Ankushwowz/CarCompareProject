@@ -1,0 +1,85 @@
+<style>
+.mt-10{margin-top:10px !important;}
+.mt-20{margin-top:20px !important;}
+</style>
+<div class="content-wrapper">
+   <!-- Content Header (Page header) -->
+   <section class="content-header">
+      <h1>
+         <i class="fa fa-users"></i>Add New Corporate User
+         <small></small>
+      </h1>
+   </section>
+   <section class="content">
+      
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="box admin-box">
+               <!-- /.box-header -->
+               <div class="box-body table-responsive">
+                    <?php 
+        $success = $this->session->flashdata('success');
+        if($success)
+        {
+            ?>
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $success; ?>                    
+            </div>
+        <?php } ?>
+		
+		
+		<div class="focouscls alert alert-success" id="reg-suc" style="display:none;">
+			Thank you for registering your account have been created
+			</div>
+			<div class="focouscls alert alert-success" id="reg-suc-1" style="display:none;">
+			Thank you for registering your account have been created and Post have been added to the websites
+			</div>
+			<div class="focouscls alert alert-danger" id="reg-danger" style="display:none;">
+			This email is already registered with an account.Please try to login with your vaild credentials 
+			</div>
+			
+                 <form action="" method="post" role="form" novalidate=""  id="my_corporate">
+					<div class="row">
+					<div class="col-md-12">
+							   <label class="control-label mt-10">First Name <span class="text-danger">*</span></label>
+							   <input type="text" name="first_name" placeholder="First Name"  class="form-control" required="true">
+					</div>
+					<div class="col-md-12">
+							   <label class="control-label mt-10">Last Name<span class="text-danger">*</span><span class="text-danger">*</span></label>
+							   <input type="text" name="last_name" placeholder="Last Name"  class="form-control" required="true">
+					</div>
+					<div class="col-md-12">
+					   <label class="control-label mt-10">Email<span class="text-danger">*</span></label>
+					   <input type="text" name="useremail" placeholder="Email"  class="form-control" required="true">
+					</div>
+					
+					<div class="col-md-12">
+					   <label class="control-label mt-10">Password <span class="text-danger">*</span></label>
+					   <input type="password" name="password" id="password" placeholder="Password"  class="form-control" required="true">
+					</div>
+					
+					
+					<div class="col-md-12">
+					   <label class="control-label mt-10">Confirm Password <span class="text-danger">*</span></label>
+					   <input type="password" name="repassword" id="repassword" placeholder="Confirm Password"  class="form-control" required="true">
+					</div>
+					
+					<div class="col-md-12" style="display:none;">
+					   <label class="control-label mt-10">Time Period <span class="text-danger">*</span></label>
+					   <input type="date" name="timeperiod" id="timeperiod" placeholder="Time Period"  class="form-control" value="<?php echo (new DateTime())->format('Y-m-d'); ?>">
+					</div>
+					
+					
+					<div class="col-md-12">
+						<input type="submit" name="submit" class="btn btn-success  mt-20" value="Save">
+					  </div>
+					</div>
+			   </form>
+               <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+         </div>
+      </div>
+   </section>
+</div>

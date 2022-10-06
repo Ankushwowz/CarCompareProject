@@ -1,0 +1,322 @@
+<!-- ========== PORTFOLIO SECTION ========== -->
+<section class="portfolio">
+      
+      <div class="container div_center">
+      <div class="col-md-8">
+                  
+                 <form action="<?php echo base_url();?>editvehicle/<?php echo $this->uri->segment(2)?>" method="post" role="form" novalidate="" class="form-horizontal" enctype="multipart/form-data" id="edit_form_sell_a_car" >
+            <div class="row">
+			    <?php if($this->session->flashdata('success')){  ?>
+                        <?php echo '<div class="alert alert-success icons-alert">
+                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                           
+                           <i class="icofont icofont-close-line-circled"></i>
+                           
+                           </button>
+                           
+                           <p class="text-message">'.$this->session->flashdata('success').'</p></div>'; ?>
+                        <?php } ?>
+               <h4>Your Car Details</h4>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Advert Type</label>
+                  <select name="advert_type" class="form-control" required='true'>
+                     <option value="">Select Advert Type</option>
+                     <option value="sell" <?php if($Records['advert_type']=='sell'){echo "selected";}?>>SELL</option>
+                     <option value="rent" <?php if($Records['advert_type']=='rent'){echo "selected";}?>>RENT</option>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Car categories</label>
+                  <select name="category" class="form-control" required='true'>
+                     <option value="">Select Category</option>
+					 <?php  foreach($carCategories as $value){?>
+						 <option value="<?php echo $value->id;?>" <?php if($Records['category']==$value->id){echo "selected";}?>><?php echo ucfirst($value->title);?></option>
+					 <?php } ?>
+                    
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Car Brand</label>
+                  <select name="brand" class="form-control" id="select-brand" required='true'> 
+                     <option value="">Select Brand</option>
+                     <?php foreach($carBrandmodels as $value){?>
+						 <option value="<?php echo $value->id;?>" <?php if($Records['brand']==$value->id){echo "selected";}?>><?php echo ucfirst($value->name);?></option>
+					 <?php } ?>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Car Model</label>
+                  <select name="model" class="form-control" id="select-model">
+					<option value="">Select Model</option>
+					<?php foreach($getBrand as $value){?>
+					<option value="<?php echo $value->id;?>" <?php if($Records['model']==$value->id){echo "selected";}?>><?php echo $value->name;?></option>
+					<?php } ?>
+                
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Year</label>                              
+                  <select name="year" class="form-control" required='true'>
+                     <option value="">Year</option>
+					 <?php for ($x = 2021; $x >= 1910; $x--) {?>
+						<option value="<?php echo $x;?>" <?php if($Records['year']==$x){echo "selected";}?>><?php echo $x;?></option>
+					 <?php } ?>
+                    
+            
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Year Of import</label>
+                  <select name="yearofimport" class="form-control" required='true'>
+                     <option value="">Select Year of Import</option>
+                      <?php for ($x = 2021; $x >= 1910; $x--) {?>
+						<option value="<?php echo $x;?>" <?php if($Records['yearofimport']==$x){echo "selected";}?>><?php echo $x;?></option>
+					 <?php } ?>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">Currency</label>
+                  <select name="currency" class="form-control" required='true'>
+                     <option value="">Select Currency</option>
+                     <option value="USD" <?php if($Records['currency']=='USD'){echo "selected";}?>>USD</option>
+                     <option value="UGX" <?php if($Records['currency']=='UGX'){echo "selected";}?>>UGX</option>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">price (For Rent per day)</label>
+                  <input id="price" type="text" name="price" placeholder="Price" value="<?php if(!empty($Records['price'])){echo $Records['price'];}?>" class="form-control numbervalidation" required='true' >
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">Mileage</label>
+				  <input id="mileage" type="text" name="mileage" placeholder="Mileage(km)" value="<?php if(!empty($Records['mileage'])){echo $Records['mileage'];}?>" class="form-control numbervalidation" required='true'>
+                  
+				  <?php /*<select name="mileage" id="mileage" class="form-control" required='true'>
+                     <option value="">Select Mileage</option>
+					 <?php foreach($mileage as $key=>$value){ ?>
+                     <option value="<?php echo $key;?>" <?php if($Records['mileage']==$key){echo "selected";}?>><?php echo $value;?></option>
+                     <?php }?>
+                  </select>*/ ?>
+				  
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Transmission</label>
+                  <select name="transmission" class="form-control" required='true'>
+                     <option value="">Select Transmission</option>
+                     <option value="automatic" <?php if($Records['transmission']=='USD'){echo "selected";}?>>Automatic</option>
+                     <option value="manual" <?php if($Records['transmission']=='manual'){echo "selected";}?>>Manual</option>
+                     <option value="semi_automatic" <?php if($Records['transmission']=='semi_automatic'){echo "selected";}?>>Semi-Automatic</option>
+                     <option value="others" <?php if($Records['transmission']=='others'){echo "selected";}?>>Others</option>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Condition</label>
+                  <select name="condition" class="form-control" required='true'>
+                     <option value="">Select Condition</option>
+                     <option value="new" <?php if($Records['condition']=='new'){echo "selected";}?>>New</option>
+                     <option value="used" <?php if($Records['condition']=='used'){echo "selected";}?>>Used</option>
+                  </select>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label" for="">Fuel Type</label>
+                  <select name="fuel_type" class="form-control" required='true'>
+                     <option value="">Select Fuel Type</option>
+                     <option value="gas" <?php if($Records['fuel_type']=='gas'){echo "selected";}?>>Gas</option>
+                     <option value="diesel" <?php if($Records['fuel_type']=='diesel'){echo "selected";}?>>Disel</option>
+                     <option value="petrol" <?php if($Records['fuel_type']=='petrol'){echo "selected";}?>>Petrol</option>
+                     <option value="octane" <?php if($Records['fuel_type']=='octane'){echo "selected";}?>>Octane</option>
+                     <option value="electricity" <?php if($Records['fuel_type']=='electricity'){echo "selected";}?>>Electricity</option>
+                     <option value="others" <?php if($Records['fuel_type']=='others'){echo "selected";}?>>Others</option>
+                  </select>
+               </div>
+               <div class="clearfix pt_40"></div>
+               <hr/>
+               <h4>Seller Contact Detail</h4>
+               <div class="col-md-6">
+                  <label class="control-label">Phone</label>                                
+                  <input id="phone_no" type="text" name="phone_no" placeholder="Phone" value="<?php if(!empty($Records['phone_no'])){echo $Records['phone_no'];}?>" class="form-control numbervalidation" required='true'>
+                  
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">Email</label>
+                  <input id="email" type="email" name="email" placeholder="Email" value="<?php if(!empty($Records['email'])){echo $Records['email'];}?>" class="form-control"  required='true'>
+                 
+               </div>
+               
+               <div class="col-md-6">
+                  <label class="control-label">Location</label>
+                  <select name="state" id="state" class="form-control" required='true'>
+				  <option value="">Select Location</option>
+				  <?php  foreach($carState as $value){?>
+						 <option value="<?php echo $value->id;?>" <?php if($Records['state']==$value->id){echo "selected";}?>><?php echo $value->name;?></option>
+					 <?php } ?>
+                  </select>
+               </div>
+              
+               <div class="tabbable py_20">
+                 
+                  <div class="tab-content" id="myTabContent2">
+                     <div id="en-1" class="tab-pane fade in active">
+                        <div class="col-md-6">
+                           <label class="control-label">Car Title</label>
+                           <input type="text" name="title" placeholder="Title" value="<?php if(!empty($Records['title'])){echo $Records['title'];}?>" class="form-control" required='true' >
+                        </div>
+                        <div class="col-md-12">
+                           <label class="control-label">Description</label> <textarea rows="5" name="description" class="form-control" ><?php if(!empty($Records['description'])){echo $Records['description'];}?></textarea>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+			       <div class="clearfix py_20 "></div>
+               <div class="col-md-12">
+                  <label class="control-label" style="padding:10px 0;">Select Listing Type</label>                     
+               </div>
+               <div class="col-md-6">
+                    <label class="package_basic_btn m-0" for="basic_pack"><input   type="radio" id="basic_pack" name="package" value="basic" <?php if($Records['package']=='basic'){echo "checked";}?>>Basic</label>
+                    
+                </div>
+                <?php /*
+               <div class="col-md-6">
+                    <label class="package_premium_btn m-0" for="premium_pack"><input type="radio" id="premium_pack" name="package" value="premium" <?php if($Records['package']=='premium'){echo "checked";}?>>Premium</label>
+                    
+                </div>*/?>
+               <div class="clearfix py_20 "></div>
+               <div class="col-md-6">
+                  <label class="control-label">Featured Image[min 300x226]</label>
+                  <div class="featured-img">
+				  <?php if(!empty($Records['featured_img'])){?>
+				  <img id="featured-img" src="<?php echo base_url();?>assets/upload/gallary/<?php echo $Records['featured_img'];?>">
+				  <?php 
+				  }else  {?>
+				   <img id="featured-img" src="<?php echo base_url();?>assets/img/no-image.png">
+				  <?php } ?>
+                    <div class="box">
+					<input  style="display:none;" type="file" name="featuredImage" id="featuredImage" class="inputfile inputfile-1"/>
+					
+					<label for="featuredImage" class="featured_img"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Upload</span></label>
+				</div>
+				<input  type="hidden" name="txtfeaturedImage" id="txtfeaturedImage" value="<?php if(!empty($Records['featured_img'])){ echo $Records['featured_img']; } ?>"/>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">Gallery</label>
+				  <?php /*
+                  <ul class="multiple-uploads">
+				  <?php foreach($galleryRecords as $value){?>
+				  <li id="<?php echo $value->id;?>" style="margin:10px 10px 0 0;overflow:hidden; "><input type="hidden" name="gallery[]" value="gallary-812898740-1596812990.jpg"><img style="width:100px; height:100px;" src="<?php echo base_url();?>assets/upload/gallary/<?php echo $value->image;?>" style="height:100%"><div style="clear:both"></div><div class="remove-image" onclick="removeimage(<?php echo $value->id;?>)">X</div></li><?php } ?>
+				 	<div class="box">
+					<input style="display:none;" type="file" name="userfile" id="galleryImage" class="inputfile inputfile-4"   />
+					    <label for="galleryImage">
+					    <figure class="plus_svg">
+					        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24">
+					            <path d="M24 10h-10v-10h-3v10h-10v3h10v10h3v-10h10z"/>
+					        </svg>
+					   </figure>
+					   <!--<span>Choose a file&hellip;</span>-->
+				        </label>
+					</div>
+				  </ul>
+                  <div class="clearfix"></div>
+			
+					
+                  <span class="gallery-upload-instruction"></span>
+                  <div class="clearfix clear-top-margin"></div>
+				 */ ?>
+				  
+				   
+				  <div class="img-zone text-center" id="img-zone">
+                    <div class="img-drop">
+                        <h2><small>Drag &amp; Drop Photos Here</small></h2>
+                        <p><em>- or -</em></p>
+                        <h2><i class="glyphicon glyphicon-camera"></i></h2>
+                        <span class="btn btn-success btn-file">
+                        Gallery<input type="file" multiple="" accept="image/*">
+                    </span>
+                    </div>
+                </div>
+                <div class="progress hidden">
+                    <div style="width: 0%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" role="progressbar" class="progress-bar progress-bar-success progress-bar-striped active">
+                        <span class="sr-only">0% Complete</span>
+                    </div>
+					 <span id="sr-only-number">0%</span>
+                </div>
+           
+				<div id="img-preview" class="row"> 
+				<?php foreach($galleryRecords as $value){?>
+				<div class="col-md-4" id="<?php echo $value->id?>"><div class="thumbnail">
+				<img src="<?php echo base_url();?>assets/upload/gallary/<?php echo $value->image;?>" />
+				<span class="remove-image" onclick="removeimage(<?php echo $value->id;?>)">X</span>
+				</div></div>
+				<?php } ?>
+				
+				  
+				  
+               </div>
+            </div>
+           <div class="clearfix pt_40"></div>
+               <hr/>
+               <h4><i class="fa fa-puzzle-piece"></i>Other Information</h4>
+               <div class="col-md-6">
+                  <label class="control-label">No of Seats</label>                                
+                  <input id="noofSeats" type="text" name="noofSeats" placeholder="No of Seats" value="<?php if(!empty($Records['noofSeats'])){echo $Records['noofSeats'];}?>" class="form-control numbervalidation" >
+                  
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">Safety Rating</label>
+                  <input id="safetyRating" type="text" name="safetyRating" placeholder="Safety Rating" value="<?php if(!empty($Records['safetyRating'])){echo $Records['safetyRating'];}?>" class="form-control numbervalidation" maxlength="1">
+                 
+               </div>
+               <div class="col-md-6">
+                  <label class="control-label">SGS Certification</label>
+				  <input type="text" name="SGS" class="form-control "  value="<?php if(!empty($Records['SGS'])){echo $Records['SGS'];}?>">
+				</div>
+              
+             
+            </div>
+            <div class="row">
+               <div class="col-md-12 pt_40">
+                  <div class="form-group" style="text-align:center">
+					<input type="hidden" id="user_id" name="user_id" value="<?php 
+                        if(!empty($this->session->userdata('user_id'))){ echo $this->session->userdata('user_id'); } ?>" >
+						<input type="hidden" id="post_id" name="post_id" value="<?php if(!empty($Records['id'])){echo $Records['id'];}?>" >
+					<input type="submit" class="btn btn-success" value="Save & Publish" name="updatevehicle">
+                  <input id="imagecount" type="hidden"  value="<?php echo count($galleryRecords);?>" >
+				  </div>
+               </div>
+            </div>
+        </form>
+     
+			   </div>
+               <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+         </div>
+     
+	  
+	    
+	<!--Image Loader-->
+	<div id="loading_img" style="display:none;">
+	 <img src="<?php echo base_url();?>assets/img/loading_img.gif"  >
+	</div>
+
+
+	  <!-- Modal -->
+	  <div class="modal fade" id="Modal5images" role="dialog" >
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title">Notification</h4>
+			</div>
+			<div class="modal-body">
+			  <p id="alert-message-gallery"></p>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		  
+		</div>
+	  </div>
+   </section>

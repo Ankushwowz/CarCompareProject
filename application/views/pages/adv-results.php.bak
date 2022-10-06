@@ -1,0 +1,110 @@
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<section id="portfolio" class="">
+   <div class="page-heading-two">
+      <div class="container">
+         <div class="col-md-7">
+            <h5>Result</h5>
+         </div>
+         <div class="clearfix"></div>
+      </div>
+   </div>
+   <div class="container">
+      <div class="row">
+         <div class="col-md-3">
+            <div class="sidebar">
+               <form role="form" action="<?php echo base_url();?>vehicle/advresults" method="post" id="search-form">
+                  <div class="s-widget">
+                     <h5>Search Filters</h5>
+                     <br>                     <!-- Form Group -->                     
+                     <div class="widget-content search">
+                        <div class="form-group">
+                           <select name="state" id="state" class="form-control  search-location filter-search">
+                              <option value="">Select Location</option>
+                              <?php  foreach($carState as $value){?>												
+                              <option value="<?php echo $value->id;?>"  <?php if(!empty($postData['state']) && $value->id==$postData['state']) { echo"selected";}?>><?php echo $value->name;?></option>
+                              <?php } ?>                                             
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="advert_type" id="advert_type" class="form-control advert-type filter-search">
+                              <option data-name="" value="">Select Advert Type</option>
+                              <option value="sell" <?php if(!empty($postData['advert_type']) && $postData['advert_type']=='sell') { echo"selected";}?>>For Sale</option>
+                              <option  value="rent"  <?php if(!empty($postData['advert_type']) && $postData['advert_type']=='rent') { echo"selected";}?>>For Rent</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select id="category_id" name="category" class="form-control search-category filter-search">
+                              <option value="">Select Category</option>
+                              <?php  foreach($carCategories as $value){?>											
+                              <option value="<?php echo $value->id;?>" <?php if(!empty($postData['category']) && $value->id==$postData['category']) { echo"selected";}?>><?php echo ucfirst($value->title);?></option>
+                              <?php } ?>											 
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="brand" id="home-select-brand" class="form-control  car-brand filter-search">
+                              <option value="">Select Brand</option>
+                              <?php foreach($carBrandmodels as $value){?>												
+                              <option value="<?php echo $value->id;?>" <?php if(!empty($postData['brand']) && $value->id==$postData['brand']) { echo"selected";}?>><?php echo ucfirst($value->name);?></option>
+                              <?php } ?>												
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="model" id="select-model" class="form-control model filter-search">
+                              <option value="">Select Model</option>
+                              <?php foreach($getBrand as $value){?>												
+                              <option value="<?php echo $value->id;?>" <?php if(!empty($postData['model']) && $value->id==$postData['model']) { echo"selected";}?>><?php echo ucfirst($value->name);?></option>
+                              <?php } ?>                                             
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="condition" id="condition" class="form-control car-condition filter-search">
+                              <option  value="">Select Condition</option>
+                              <option  value="new" <?php if(!empty($postData['condition']) && $postData['condition']=='new') { echo"selected";}?>>New</option>
+                              <option value="used" <?php if(!empty($postData['condition']) && $postData['condition']=='used') { echo"selected";}?>>Used</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="fuel_type" id="fuel_type" class="form-control fueltype filter-search">
+                              <option value="">Select Fuel Type</option>
+                              <option value="gas" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='gas') { echo"selected";}?>>Gas</option>
+                              <option value="diesel" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='diesel') { echo"selected";}?>>Disel</option>
+                              <option value="petrol" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='petrol') { echo"selected";}?>>Petrol</option>
+                              <option  value="octane" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='octane') { echo"selected";}?>>Octane</option>
+                              <option  value="electricity" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='electricity') { echo"selected";}?>>Electricity</option>
+                              <option value="others" <?php if(!empty($postData['fuel_type']) && $postData['fuel_type']=='others') { echo"selected";}?>Others</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="mileage_range" id="mileage_range" class="form-control mileage-range filter-search">
+                              <option value="">Select Mileage</option>
+                              <?php foreach($mileage as $key=>$value){ ?>												
+                              <option value="<?php echo $key;?>" <?php if(!empty($postData['mileage_range']) && $key==$postData['mileage_range']) { echo"selected";}?>><?php echo $value;?></option>
+                              <?php }?>                                             
+                           </select>
+                        </div>
+						 <div class="form-group" >
+                           <select name="currency" class="form-control currency filter-search">
+                               <option value="">Select Currency</option>
+                              <option value="USD" <?php if(!empty($postData['currency']) && $postData['currency']=='USD') { echo"selected";}?>>USD</option>
+                              <option  value="UGX"  <?php if(!empty($postData['currency']) && $postData['currency']=='UGX') { echo"selected";}?>>UGX</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <select name="price" class="form-control price filter-search">
+                              <option value="" selected="">Price</option>
+                             <?php foreach($price as $key=>$value){ ?>
+								<option value="<?php echo $key;?>" <?php if(!empty($postData['price']) && $key==$postData['price']) { echo"selected";}?>><?php echo $value;?></option>
+								<?php }?>
+                           </select>
+                        </div>
+						  
+                        <!-- Button -->                        <button style="width: 100%;background: #0b82f7;" class="btn btn-success" id="filter-search" type="submit"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search Cars <span id="countrec">(<?php echo $searchcount;?>)</span><span id="loading-img"><img  style="display:none;" id="homeloading" src="<?php echo base_url();?>assets/img/loader_2.gif"></span></button>&nbsp;                     
+                     </div>
+                  </div>
+               </form>
+            </div>
+         </div>
+         
+      </div>
+   </div>
+</section>

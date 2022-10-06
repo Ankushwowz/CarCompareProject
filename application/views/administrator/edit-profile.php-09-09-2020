@@ -1,0 +1,29 @@
+<div class="content-wrapper">
+   <!-- Content Header (Page header) -->
+   <section class="content-header">
+      <h1>Edit Profile</h1>
+   </section>
+   <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box admin-box">
+                    <!-- /.box-header -->
+                    <div class="box-body table-responsive">
+         
+                        <form action="#" method="post" role="form" novalidate=""  id="my_add_brand">
+					        <div class="row">
+					
+					
+        					    <div class="col-md-12">
+        						    <input type="submit" name="submit" class="btn btn-success mt-20" value="Update">
+        					    </div>
+					        </div>
+			            </form>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,104 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/*
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+|
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	https://codeigniter.com/user_guide/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There are three reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+|
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router which controller/method to use if those
+| provided in the URL cannot be matched to a valid route.
+|
+|	$route['translate_uri_dashes'] = FALSE;
+|
+| This is not exactly a route, but allows you to automatically route
+| controller and method names that contain dashes. '-' isn't a valid
+| class or method name character, so it requires translation.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
+|
+| Examples:	my-controller/index	-> my_controller/index
+|		my-controller/my-method	-> my_controller/my_method
+*/
+$route['default_controller'] = 'home';
+$route['post-ad'] = "home/postAdd";
+$route['used-car'] = "vehicle/usedCar";
+$route['rent-car'] = "vehicle/rentCar";
+$route['new-car'] = "vehicle/newCar";
+$route['advance-search'] = "vehicle/advanceSearch";
+$route['viechle/(:any)'] = "vehicle/index/$1";
+$route['contact-us'] = "home/contact";
+$route['car-review'] = "home/carReview";
+$route['car-single-review/(:any)'] = "home/carReviewById/$1";
+$route['preview/(:any)'] = "home/previewPost/$1";
+$route['editvehicle/(:any)'] = "home/editvehicle/$1";
+
+
+$route['buypackage'] = 'PayPesaPal/buyproducts';
+$route['pesapal/pay/(:any)'] = 'PayPesaPal/paynow/$1';
+$route['pesapal/paid'] = 'PayPesaPal/paid';
+$route['pesapal/response'] = 'PayPesaPal/ipn';
+
+
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
+
+
+$route['administrator'] = 'administrator/loginMe';
+$route['corporate-administrator'] = 'administrator/loginMe';
+$route['dashboard'] = 'administrator/dashboard';
+$route['logout'] = 'administrator/logout';
+$route['administrator/sell-car'] = 'administrator/sellCar';
+$route['edit-vehicle/(:any)'] = "administrator/editvehicle/$1";
+$route['administrator/theme-setting'] = "administrator/themeSetting";
+$route['administrator/editcarreview/(:any)'] = "administrator/editcarreview/$1";
+
+$route['signin'] = "login/signin";
+$route['signup'] = "login";
+
+$route['stripePost']['post'] = "stripe/stripePost";
+$route['payment/(:any)'] = "payment/paymentmodule/$1";
+
+
+$route['user-dashboard'] = "login/dashboard";
+$route['search-saved'] = "dashboard/searchSaved";
+$route['view-save-search'] = "dashboard/viewSaveSearch";
+$route['success'] = "dashboard/success";
+$route['cart'] = "dashboard/cart";
+$route['payment-method'] = "payment/paymentMethod";
+$route['buy-search'] = "dashboard/buySearch";
+$route['searching-map'] = 'advancedsearch/searchingMap';
+
+$route['single-searching/(:any)/(:any)'] = "advancedsearch/singleSearching/$1/$1";
+
+
+$route['forget-password'] = "administrator/forgetpassword";

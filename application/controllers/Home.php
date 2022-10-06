@@ -1,0 +1,437 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Home extends CI_Controller {
+
+	 
+    public function __construct(){
+        parent::__construct();
+        
+        $this->load->helper('url');
+        $this->load->library('session');
+        $this->load->config('email');
+        $this->load->library('email');
+        $this->load->model('Post_Model');
+        $this->load->model('administrator_model');
+		$this->load->library("pagination");
+	  
+    }
+    
+	public function index(){
+		$data['Title'] ="";
+		$data['carCategories'] = $this->Post_Model->car_categories();
+		$data['carBrandmodels'] = $this->Post_Model->car_brandmodels();
+		$data['carState'] = $this->Post_Model->car_state();
+		$data['getBrand'] = $this->Post_Model->getBrand();
+		$data['searchcount'] = $this->Post_Model->searchFilter();
+		$data['latestPost'] = $this->Post_Model->latestPost();
+		//echo "<pre>"; print_r($data['latestPost']); die;
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		
+		/*$mileage = array();					
+		for ($x = 5; $x <= 50; $x+=2) {
+			$mileage[$x] = $x.' miles';
+		}
+		$data['mileage']=	$mileage;	 
+		*/
+		$data['mileage']= array(
+				"100"  =>"Up to 100 Km",
+				"500"  =>"Up to 500 Km",
+				"5000"     =>"Up to 5,000 Km",
+				"10000"  =>"Up to 10,000 Km",
+				"15000"  =>"Up to 15,000 Km",
+				"20000"  =>"Up to 20,000 Km",
+				"25000"  =>"Up to 25,000 Km",
+				"30000"  =>"Up to 30,000 Km",
+				"35000"  =>"Up to 35,000 Km",
+				"40000"  =>"Up to 40,000 Km",
+				"45000"  =>"Up to 45,000 Km",
+				"50000"  =>"Up to 50,000 Km",
+				"60000"  =>"Up to 60,000 Km",
+				"70000"  =>"Up to 70,000 Km",
+				"80000"  =>"Up to 80,000 Km",
+				"90000"  =>"Up to 90,000 Km",
+				"100000"  =>"Up to 100,000 Km",
+				"125000"  =>"Up to 125,000 Km",
+				"150000"  =>"Up to 150,000 Km",
+				"200000"  =>"Up to 200,000 Km",
+				"250000"  =>"More than 200,000 Km",
+			);
+
+		
+		
+		$this->load->view('templates/header');
+		$this->load->view('pages/index',$data);
+		$this->load->view('templates/footer');
+	}
+	public function postAdd(){
+	   $userid = $this->session->userdata('user_id');
+
+		$data['Title'] ="";
+		$data['carCategories'] = $this->Post_Model->car_categories();
+		$data['carBrandmodels'] = $this->Post_Model->car_brandmodels();
+		$data['carState'] = $this->Post_Model->car_state();
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		$data['carUsers'] = $this->Post_Model->userDetail($userid);
+	    //echo "<pre>"; print_r($data['carUsers']); die;
+		$mileage = array();					
+		for ($x = 5; $x <= 50; $x++) {
+			$mileage[$x] = $x.' miles';
+		}
+		$data['mileage']=	$mileage;
+		
+		
+		//echo "<pre>"; print_r($data['advert']); die;
+		$this->load->view('templates/header');
+		$this->load->view('pages/post-add',$data);
+		$this->load->view('templates/footer');
+	}
+	function addImageGallary(){
+			$data = $this->Post_Model->addImageGallary();
+			echo json_encode($data);
+	}
+		
+   function removeimage(){
+			$data = $this->Post_Model->removeimage();
+			echo $data;
+	}
+	function selectBrandWithAjax(){
+			$data = $this->Post_Model->selectBrand();
+			echo $data;
+	}
+	function selectCategoryWithAjax(){
+			$data = $this->Post_Model->selectCategory();
+			echo $data;
+	}
+	function sellACarWithAjax(){
+	    //echo "<pre>"; print_r($_POST); die;
+		$data = $this->Post_Model->savePostAdd();
+		echo $data;
+	}
+	
+	function savepublish(){
+			//echo "<pre>"; print_r($_POST['id']); die;
+			$data = $this->Post_Model->savepublish();
+			echo 1;
+	}
+	
+	function getBrandOnChange(){
+		$data = $this->Post_Model->getBrandOnChange();
+		echo $data;
+	}
+	function searchFilter(){
+		$data = $this->Post_Model->searchFilter();
+		echo $data;
+	}
+	
+	
+	function fImageGallary(){
+			$data = $this->Post_Model->fImageGallary();
+			echo $data;
+	}
+	public function contact(){
+		$data['Title'] ="";
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		//echo "<pre>"; print_r($data['themesetting']); die;
+		$this->load->view('templates/header');
+		$this->load->view('pages/contact-us',$data);
+		$this->load->view('templates/footer');
+	}
+	function contactform(){
+		$data = $this->Post_Model->contactform();
+		echo $data;
+	}
+	function getcategoryOnChange(){
+		$data = $this->Post_Model->getcategoryOnChange();
+		echo $data;
+	}
+	function forgotPassword(){
+		$data = $this->Post_Model->forgotPassword();
+		echo $data;
+	}
+	public function carReview(){
+		$data['Title'] ="";
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		/*if(!empty($_POST['search'])){
+			 $data['blogreview'] = $this->Post_Model->carreviewByPost();
+		}else{
+		 $data['blogreview'] = $this->Post_Model->carreview();	
+		}*/
+		$data['blogreview'] = $this->Post_Model->carreviewByPost();
+		$this->load->view('templates/header');
+		$this->load->view('pages/car-review',$data);
+		$this->load->view('templates/footer');
+	}
+	public function carReviewById($id){
+		$data['Title'] ="";
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		$data['blogreview'] = $this->Post_Model->carReviewById($id);
+		$this->load->view('templates/header');
+		$this->load->view('pages/car-single-review',$data);
+		$this->load->view('templates/footer');
+	}
+	
+	function upload_gallery(){
+		//$source_path = $_SERVER['DOCUMENT_ROOT'] . '/cardealer/assets/upload/gallary/';
+		$source_path = $_SERVER['DOCUMENT_ROOT'] . '/carcompare/dev/assets/upload/gallary/';
+	if($_SERVER['REQUEST_METHOD'] == "POST")
+{
+	$error = '';
+	$img = '';
+	$dir = $source_path;
+	$extensions = array("jpeg","jpg","png");
+	$showpath =base_url()."/assets/upload/gallary/";
+	foreach($_FILES['img_file']['tmp_name'] as $key => $tmp_name ){
+		$file_name = $_FILES['img_file']['name'][$key];
+		$file_size = $_FILES['img_file']['size'][$key];
+		$file_tmp  = $_FILES['img_file']['tmp_name'][$key];
+		$file_type = $_FILES['img_file']['type'][$key];
+		
+		$file_ext  = explode('.', $file_name);
+		$file_ext  = strtolower(end($file_ext));
+		
+		if(in_array($file_ext,$extensions ) === true)
+		{
+			if(move_uploaded_file($file_tmp, $dir.$file_name))
+			{
+				$img .= '<div class="col-md-4"><div class="thumbnail">';
+				$img .= '<img src="'.$showpath.$file_name.'" />';
+				$img .= '</div></div>';		
+			}
+			else
+				$error = 'Error in uploading few files. Some files couldn\'t be uploaded.';				
+		}	
+		else
+		{
+			$error = 'Error in uploading few files. File type is not allowed.';
+		}		
+	}
+	echo (json_encode(array('error' => $error, 'img' => $img)));	
+}
+die();
+	}
+	
+	public function newpostadd(){
+		$data['Title'] ="";
+		$data['carCategories'] = $this->Post_Model->car_categories();
+		$data['carBrandmodels'] = $this->Post_Model->car_brandmodels();
+		$data['carState'] = $this->Post_Model->car_state();
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		$mileage = array();					
+		for ($x = 5; $x <= 50; $x++) {
+			$mileage[$x] = $x.' miles';
+		}
+		$data['mileage']=	$mileage;
+		$this->load->view('templates/header');
+		$this->load->view('pages/post-add-demo',$data);
+		$this->load->view('templates/footer');
+	}
+	function multipleImageStore(){
+		$data = $this->Post_Model->multipleImageStore();
+		echo $data;
+	}
+	public function carreviewloadRecord($rowno=0){
+	    $rowno =$_POST['pagno'];
+		// Row per page
+		$rowperpage = 5;
+		// Row position
+		if($rowno != 0){
+			$rowno = ($rowno-1) * $rowperpage;
+		}
+      	
+      	// All records count
+      	$allcount = $this->Post_Model->getrecordCount();
+		// Get  records
+      	$users_record = $this->Post_Model->getData($rowno,$rowperpage);
+      	
+      	// Pagination Configuration
+      	$config['base_url'] = base_url().'home/carreviewloadRecord';
+      	$config['use_page_numbers'] = TRUE;
+		$config['total_rows'] = $allcount;
+		$config['per_page'] = $rowperpage;
+		$config['anchor_class'] = 'class="number" ';
+		// Initialize
+		$this->pagination->initialize($config);
+
+		// Initialize $data Array
+		$data['pagination'] = $this->pagination->create_links();
+		$data['result'] = $users_record;
+		$data['row'] = $rowno;
+		$data['allcount'] = $allcount;
+		echo json_encode($data);
+		
+	}
+	public function previewPost($id){
+		$data['Title'] ="";
+		$data['themesetting'] = $this->Post_Model->themeSetting();
+		$data['Records'] = $this->Post_Model->previewvehicle($id);
+		//echo "<pre>"; print_r($data['Records']); die;
+		$data['galleryRecords'] = $this->administrator_model->galleryRecords($id);	
+		$this->load->view('templates/header');
+		$this->load->view('pages/preview-post',$data);
+		$this->load->view('templates/footer');
+	}
+	public function editvehicle($id){
+		if(!empty($_POST['updatevehicle'])){
+			$updateRecords = $this->administrator_model->updateRecords();	
+			
+		}
+		$data['pageTitle'] = 'Cardealer : Edit vehicle';
+		$data['carCategories'] = $this->Post_Model->car_categories();
+		$data['carBrandmodels'] = $this->Post_Model->car_brandmodels();
+		$data['carState'] = $this->Post_Model->car_state();
+		$data['getBrand'] = $this->Post_Model->getBrand();
+		$data['mileage']= array(
+				"100"  =>"Up to 100 Km",
+				"500"  =>"Up to 500 Km",
+				"5000"     =>"Up to 5,000 Km",
+				"10000"  =>"Up to 10,000 Km",
+				"15000"  =>"Up to 15,000 Km",
+				"20000"  =>"Up to 20,000 Km",
+				"25000"  =>"Up to 25,000 Km",
+				"30000"  =>"Up to 30,000 Km",
+				"35000"  =>"Up to 35,000 Km",
+				"40000"  =>"Up to 40,000 Km",
+				"45000"  =>"Up to 45,000 Km",
+				"50000"  =>"Up to 50,000 Km",
+				"60000"  =>"Up to 60,000 Km",
+				"70000"  =>"Up to 70,000 Km",
+				"80000"  =>"Up to 80,000 Km",
+				"90000"  =>"Up to 90,000 Km",
+				"100000"  =>"Up to 100,000 Km",
+				"125000"  =>"Up to 125,000 Km",
+				"150000"  =>"Up to 150,000 Km",
+				"200000"  =>"Up to 200,000 Km",
+				"250000"  =>"More than 200,000 Km",
+			);
+		$data['Records'] = $this->administrator_model->editvehicle($id);
+		//echo "<pre>"; print_r($data['Records']); die;
+		$data['galleryRecords'] = $this->administrator_model->galleryRecords($id);	
+		
+		$this->load->view('templates/header');
+		$this->load->view('pages/editvehicle',$data);
+		$this->load->view('templates/footer');
+       
+    }
+    
+      function send($to,$subject,$message) {
+        $this->load->config('email');
+        $this->load->library('email');
+        $from = $this->config->item('smtp_user');
+        $to = $to;
+        $subject = $subject;
+        $message = $message;
+
+        $this->email->set_newline("\r\n");
+        $this->email->from($from);
+        $this->email->to($to);
+        $this->email->subject($subject);
+        $this->email->message($message);
+
+        if ($this->email->send()) {
+			return 1;
+            //echo 'Your Email has successfully been sent.';
+        } else {
+			return 0;
+            //show_error($this->email->print_debugger());
+        }
+    }
+	
+   function emailsendfor7day(){
+       
+       
+             /*$name = "Harsh";
+                $email = "harshkumar283@gmail.com";
+                $to = $email;
+                $subject = "Notfication of Expiring Post";
+				$message ="<html>
+				<head>
+				<title>Carcompareug</title>
+				</head>
+				<body>
+				<p>Dear ".$name."</p>
+				<table>
+				<tr>
+				<td><p>Thank you for advertising your vehicle with Car Compare Services. We wish to remind you that your advert is due to expire in 7 days.</p></td>
+				</tr>
+				<tr>
+				<td><p>If you have sold your vehicle, or if it is no longer available, please update your advert.</p></td>
+				</tr>
+				<tr>
+				<td><p>If your vehicle is still on the market, we would suggest you add more information and pictures to your listing to increase visibility to prospective buyers, and relist the vehicle. You may also wish to consider reducing the price to make it more attractive.</p>
+				<p>We thank you for your support and if you have any questions please do not hesitate to contact us</p></td>
+				</tr>
+				<tr><td><p>Yours sincerely</p></td>
+				</tr>
+				</tr>
+				<tr><td><p>Car Compare Services</p>
+				<p>info@carcompareug.com</p></td>
+				</tr>
+				</table>
+				</body>
+				</html>";
+             echo 	$message;
+            $sendmail = $this->send($to,$subject,$message);
+            if($sendmail){
+                echo 1;
+               
+            }else{
+                echo 0;
+            } 
+      
+       */
+       
+     $getResult = $this->Post_Model->emailsendfor7day();
+     
+      if($getResult >0){
+          foreach($getResult as $getResult){
+               $name = $getResult->first_name;
+                $email = $getResult->user_email;
+                $to = $email;
+                $subject = "Notfication of Expiring Post";
+				$message ="<html>
+				<head>
+				<title>Carcompareug</title>
+				</head>
+				<body>
+				<p>Dear ".$name."</p>
+				<table>
+				<tr>
+				<td><p>Thank you for advertising your vehicle with Car Compare Services. We wish to remind you that your advert is due to expire in 7 days.</p></td>
+				</tr>
+				<tr>
+				<td><p>If you have sold your vehicle, or if it is no longer available, please update your advert.</p></td>
+				</tr>
+				<tr>
+				<td><p>If your vehicle is still on the market, we would suggest you add more information and pictures to your listing to increase visibility to prospective buyers, and relist the vehicle. You may also wish to consider reducing the price to make it more attractive.</p>
+				<p>We thank you for your support and if you have any questions please do not hesitate to contact us</p></td>
+				</tr>
+				<tr><td><p>Yours sincerely</p></td>
+				</tr>
+				</tr>
+				<tr><td><p>Car Compare Services</p>
+				<p>info@carcompareug.com</p></td>
+				</tr>
+				</table>
+				</body>
+				</html>";
+             echo 	$message;
+            $sendmail = $this->send($to,$subject,$message);
+            if($sendmail){
+                echo 1;
+               
+            }else{
+                echo 0;
+            } 
+          }
+      }
+      
+      
+      
+      
+		      
+	}
+   
+
+
+}

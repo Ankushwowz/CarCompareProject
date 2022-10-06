@@ -1,0 +1,739 @@
+<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+class Administrator_model extends CI_Model{
+    protected $car_posts = 'car_posts';
+	protected $car_upload_images = 'car_upload_images';
+	protected $car_users = 'car_users';
+	protected $car_categories = 'car_categories';
+	protected $car_brandmodels = 'car_brandmodels';
+	protected $theme_setting = 'theme_setting';
+	protected $car_blog = 'car_blog';
+		public function __construct()
+		{
+			parent::__construct();
+			$this->load->database();
+			
+		}
+	
+	
+	function loginMe($email, $password) {
+	$where =" (user_type= '1' OR user_type='3' )";
+        $this->db->from('car_users');
+		$this->db->where('user_email',$email);
+        $this->db->where('password',md5($password));
+        $this->db->where('status',1);
+        $this->db->where($where);
+        $query = $this->db->get();
+		$numRow = $query->num_rows();
+		if($numRow > 0){
+		     $expiry =  $query->row_array();
+		     
+		   if($expiry['user_type'] == 3){
+		       $today = date('Y-m-d');
+		       //echo "<pre>"; print_r($expiry['timeperiod']); die;
+		       if($today > $expiry['timeperiod']){
+		           return 0;
+
+		       }
+		    }else{
+		 return $query->row_array();
+		}
+		return $query->row_array();
+		}
+    }
+   function sellCar(){
+      /* $this->db->from('car_posts');
+	   if(!empty($this->session->userdata('role')) && $this->session->userdata('role')==2) {
+		 $this->db->where('user_id',$this->session->userdata('user_id'));  
+	   }
+	   if(!empty($this->session->userdata('role')) && $this->session->userdata('role')==3) {
+		 $this->db->where('user_id',$this->session->userdata('user_id'));  
+	   }
+       $query = $this->db->get();
+       return $query->result();*/
+       
+       
+       $this->db->select('car_posts.*, car_users.*,car_posts.id as postid,car_posts.status as poststatus');
+       if(!empty($this->session->userdata('role')) && $this->session->userdata('role')==2) {
+		 $this->db->where('car_posts.user_id',$this->session->userdata('user_id'));  
+	   }
+	   if(!empty($this->session->userdata('role')) && $this->session->userdata('role')==3) {
+		 $this->db->where('car_posts.user_id',$this->session->userdata('user_id'));  
+	   }
+        $this->db->from('car_posts');
+        $this->db->join('car_users', 'car_users.id = car_posts.user_id', 'left');
+        $query = $this->db->get();
+       return $query->result();
+       
+       
+       
+       
+    }
+	
+	function getinfo(){
+       $this->db->from('car_users');
+	   $this->db->where('id',$this->session->userdata('user_id'));  
+	  $query = $this->db->get();
+       return $query->row_array();
+    }
+    
+    
+    function getUserName($user_id){
+        $this->db->from('car_users');
+	   $this->db->where('id',$user_id);  
+	  $query = $this->db->get();
+       return $query->row_array();
+    }
+    
+    
+	function editvehicle($id){
+		$postid =base64_decode($id);
+		$this->db->from($this->car_posts);
+		$this->db->where('id',$postid);  
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	function galleryRecords($id){
+		$postid =base64_decode($id);
+		$this->db->from($this->car_upload_images);
+		$this->db->where('post_id',$postid);  
+		$query = $this->db->get();
+		return $query->result();
+    }
+		function addImageGallary(){
+		$browser_id = session_id();
+		$array = array();
+		if(!empty($this->session->userdata('user_id'))){
+			$user_id = $this->session->userdata('user_id');
+			$post_id = $this->input->post('post_id');
+		}else{
+			$user_id = '';
+			$post_id = '';
+		}
+
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		if(!empty($_FILES['userfile']["name"])){
+		 $ext = pathinfo($_FILES['userfile']["name"]);
+			$fileName = rand().'-'.time().'.'.$ext['extension'];
+			$_FILES['userfile']["name"]= 'gallary-'.$fileName;
+			//Upload Image
+			$config['upload_path'] = './assets/upload/gallary/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			//$config['max_size'] = '*';
+			//$config['max_width'] = '2000';
+			//$config['max_height'] = '2000';
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('userfile')){
+				$errors =  array('error' => $this->upload->display_errors());
+				$array['error'] = $errors;
+			}else{
+				$data =  array('upload_data' => $this->upload->data());
+				$this->resizeImage($_FILES['userfile']['name']);
+				$this->db->where('post_id',$post_id)->from($this->car_upload_images);
+				$query = $this->db->get();
+				$numRow = $query->num_rows();
+				if($this->input->post('packageName')=='basic'){
+					if($numRow >4){
+					$array['imagecount'] = 5; 
+					$array['imagename'] = ''; 
+				}else{
+						$data = array(
+							'image' => $_FILES['userfile']['name'],
+							'browser_id' => $browser_id,
+							'user_id' => $user_id,
+							'post_id' => $post_id,
+							'created_date' => date("Y-m-d H:i:s")
+						);
+						$result = $this->db->insert($this->car_upload_images, $data);
+						$lastID = $this->db->insert_id();
+						$array['id'] =$lastID; 
+						$array['imagecount'] = $numRow; 
+						$array['imagename'] = $_FILES['userfile']['name']; 
+				
+				}
+				}else{
+					if($numRow >9){
+					$array['imagecount'] = 10; 
+					$array['imagename'] = ''; 
+				}else{
+						$data = array(
+							'image' => $_FILES['userfile']['name'],
+							'browser_id' => $browser_id,
+							'user_id' => $user_id,
+							'post_id' => $post_id,
+							'created_date' => date("Y-m-d H:i:s")
+						);
+						$result = $this->db->insert($this->car_upload_images, $data);
+						$lastID = $this->db->insert_id();
+						$array['id'] =$lastID; 
+						$array['imagecount'] = $numRow; 
+						$array['imagename'] = $_FILES['userfile']['name']; 
+				
+				}
+				}	
+				
+				return $array;
+				
+			}
+		
+		}
+	}
+	
+	function fImageGallary(){
+		$array = array();
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		if(!empty($_FILES['userfile']["name"])){
+		 $ext = pathinfo($_FILES['userfile']["name"]);
+			$fileName = rand().'-'.time().'.'.$ext['extension'];
+			$_FILES['userfile']["name"]= 'gallary-'.$fileName;
+			//Upload Image
+			$config['upload_path'] = './assets/upload/gallary/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			;
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('userfile')){
+				$errors =  array('error' => $this->upload->display_errors());
+				$array['error'] = $errors;
+			}else{
+				$data =  array('upload_data' => $this->upload->data());
+				$this->resizeImage($_FILES['userfile']['name']);
+				echo $_FILES['userfile']['name'];
+				
+			}
+		
+		}
+	}
+	
+	public function resizeImage($filename){
+	$source_path = $_SERVER['DOCUMENT_ROOT'] . '/assets/upload/gallary/' . $filename;
+	$target_path = $_SERVER['DOCUMENT_ROOT'] . '/assets/upload/gallary/thumbnail/';
+	 
+	// $source_path = './assets/img/portfolio/' . $filename;
+	 //$target_path =  './assets/img/portfolio/thumbnail/';
+
+      $config_manip = array(
+          'image_library' => 'gd2',
+          'source_image' => $source_path,
+          'new_image' => $target_path,
+          'maintain_ratio' => TRUE,
+          //'create_thumb' => TRUE,
+          //'thumb_marker' => '_thumb',
+          'width' => 150,
+          'height' => 150
+      );
+
+		$this->load->library('image_lib',$config_manip);
+		$this->image_lib->initialize($config_manip);
+      if (!$this->image_lib->resize()) {
+          echo $this->image_lib->display_errors();
+      }
+		$this->image_lib->clear();
+   }
+
+	
+	function removeimage(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+        return $this->db->delete($this->car_upload_images);
+    }
+	function updateRecords(){
+	$data = array(   'advert_type' => $_POST['advert_type'],
+							'category' => $_POST['category'],
+							'brand' => $_POST['brand'],
+							'model' => $_POST['model'],
+							'year' => $_POST['year'],
+							'yearofimport' => $_POST['yearofimport'],
+							'currency' => $_POST['currency'],
+							'price' => $_POST['price'],
+							'mileage' => $_POST['mileage'],
+							'transmission' => $_POST['transmission'],
+							'condition' => $_POST['condition'],
+							'fuel_type' => $_POST['fuel_type'],
+							'phone_no' => $_POST['phone_no'],
+							'email' => $_POST['email'],
+							'state' => $_POST['state'],
+							'title' => $_POST['title'],
+							'description' => $_POST['description'],
+							'featured_img' => $_POST['txtfeaturedImage'],
+							'package' => $_POST['package'],
+							'noofSeats' => $_POST['noofSeats'],
+							'safetyRating' => $_POST['safetyRating'],
+							'SGS' => $_POST['SGS'],
+							'guideprice' => $_POST['guide_price'],
+							'status' => $_POST['post_status']
+							
+						);
+						
+	
+	$this->db->where('id', $_POST['post_id']);
+    return $this->db->update($this->car_posts, $data);
+	//$this->session->set_flashdata('success', 'This post has been updated successfully');
+
+	}
+	//Delete Language
+	function deletevehicle(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_posts);
+	}
+	 function users(){
+       $this->db->from($this->car_users);
+	   $this->db->where('user_type', 2);
+	   $query = $this->db->get();
+       return $query->result();
+    }
+	function deleteuser(){
+		$id = $this->input->post('id');
+		$this->db->where('user_id', $id);
+		$this->db->delete($this->car_posts);
+		$this->db->where('user_id', $id);
+		$this->db->delete($this->car_upload_images);
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_users);
+	}
+	function category(){
+       $this->db->from($this->car_categories);
+	   $query = $this->db->get();
+       return $query->result();
+    }
+	function addcategory(){
+       $data = array( 'title' => $_POST['catName']);
+		$result = $this->db->insert($this->car_categories, $data);
+    }
+	function deletecategory(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_categories);
+	}
+	function getcategorybyid($id){
+       $this->db->from($this->car_categories);
+	   $this->db->where('id', $id);
+	   $query = $this->db->get();
+       return $query->row_array();
+    }
+	function editcategory($id){
+		$data = array( 'title' => $_POST['catName']);
+		$this->db->where('id', $id);
+		$this->db->update($this->car_categories, $data);
+		$this->session->set_flashdata('success', $_POST['catName']. ' category has been Edit succesfully');
+	}
+	function brand(){
+       $this->db->select('car_brandmodels.*');
+		$this->db->from($this->car_brandmodels);
+		$this->db->where('parent', 0);
+		$query = $this->db->get();
+		return $query->result();
+	 }
+	function addbrand(){
+       $data = array( 'name' => $_POST['brandName'],'type' =>'brand');
+		$result = $this->db->insert($this->car_brandmodels, $data);
+    }
+	function editbrand($id){
+		$data = array( 'category_id' => $_POST['category_id'],'name' => $_POST['brandName']);
+		$this->db->where('id', $id);
+		$this->db->update($this->car_brandmodels, $data);
+		$this->session->set_flashdata('success', $_POST['brandName']. ' barnd has been edit succesfully');
+	}
+	function deletebrand(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_brandmodels);
+	}
+	function getbrandbyid($id){
+       $this->db->select('car_brandmodels.*');
+	   $this->db->where('car_brandmodels.id', $id);
+	   $this->db->from($this->car_brandmodels);
+		
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	function getbrand(){
+       $this->db->from($this->car_brandmodels);
+	   $this->db->where('parent', 0);
+	   $query = $this->db->get();
+       return $query->result();
+    }
+	function model(){
+		$where = "car_brandmodels.parent!=0";
+		$this->db->select('brand.name as brandname,model.name as modelname,car_brandmodels.*,car_categories.title');
+		//$this->db->where($where);
+		$this->db->from($this->car_brandmodels);
+		$this->db->join('car_brandmodels  brand', 'brand.id  = car_brandmodels.parent');
+		$this->db->join('car_brandmodels  model', 'model.id  = car_brandmodels.id');
+		$this->db->join('car_categories', 'car_categories.id  = car_brandmodels.category_id','left');
+		$query = $this->db->get();
+		return $query->result();
+	 }
+	function addmodel(){
+       $data = array( 'category_id' => $_POST['category_id'],'parent' => $_POST['brand_id'],'name' => $_POST['modelName'],'type' =>'model');
+		$result = $this->db->insert($this->car_brandmodels, $data);
+    }
+	function getmodelbyid($id){
+      $this->db->select('brand.name as brandname,model.name as modelname,car_brandmodels.*,car_categories.title,car_categories.id as categoryid');
+		$this->db->where('car_brandmodels.id', $id);
+		$this->db->from($this->car_brandmodels);
+		$this->db->join('car_brandmodels  brand', 'brand.id  = car_brandmodels.parent');
+		$this->db->join('car_brandmodels  model', 'model.id  = car_brandmodels.id');
+		$this->db->join('car_categories', 'car_categories.id  = car_brandmodels.category_id');
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	function editmodel($id){
+		$data = array( 'category_id' => $_POST['category_id'],'parent' => $_POST['brand_id'],'name' => $_POST['modelName']);
+		$this->db->where('id', $id);
+		$this->db->update($this->car_brandmodels, $data);
+		$this->session->set_flashdata('success', $_POST['modelName']. ' model has been edit succesfully');
+	}
+	function deletemodel(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_brandmodels);
+	}
+	function themeSetting(){
+		$this->db->from($this->theme_setting);
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	function savetheme(){
+		$id =1;
+		$data = array(
+		              'section1' => $_POST['section1'],
+							'section2' => $_POST['section2'],
+							'section3' => $_POST['section3'],
+							'section4' => $_POST['section4'],
+							'section5' => $_POST['section5'],
+							'section6' => $_POST['section6'],
+							'section7' => $_POST['section7'],
+							'section8' => $_POST['section8'],
+							'section9' => $_POST['section9'],
+							'section10' => $_POST['section10'],
+							'section11' => $_POST['section11'],
+							'section12' => $_POST['section12'],
+							'section13' => $_POST['section13'],
+							'section14' => $_POST['section14'],
+							'section15' => $_POST['section15'],
+							'section16' => $_POST['section16']
+							
+						);
+	$this->db->where('id', $id);
+	$result = $this->db->update($this->theme_setting, $data);
+	$this->session->set_flashdata('success',  ' Website theme setting has been added successfully');
+    }
+	function carreview(){
+		$this->db->from($this->car_blog);
+		$this->db->order_by("id", "desc");
+		$query = $this->db->get();
+		return $query->result();
+    }
+	function addcarreview(){
+		$array = array();
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		
+		
+		if(!empty($_FILES['userfile']["name"])){
+		 $ext = pathinfo($_FILES['userfile']["name"]);
+			$fileName = rand().'-'.time().'.'.$ext['extension'];
+			$_FILES['userfile']["name"]= 'blog-'.$fileName;
+			//Upload Image
+			$config['upload_path'] = './assets/upload/gallary/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('userfile')){
+				$errors =  array('error' => $this->upload->display_errors());
+				$array['error'] = $errors;
+			}else{
+				$data =  array('upload_data' => $this->upload->data());
+				$this->resizeImage($_FILES['userfile']['name']);
+				$featured_img =  $_FILES['userfile']['name'];
+				
+			}
+		
+		}
+			$data = array(
+							'featured_img' => $_FILES['userfile']['name'],
+							'title' => $_POST['title'],
+							'shortdescription' => $_POST['shortdescription'],
+							'description' => $_POST['description'],
+							'created_date' => date("Y-m-d H:i:s"),
+							'created_by' => $this->session->userdata('user_id')
+						);
+						return $result = $this->db->insert($this->car_blog, $data);
+						$lastID = $this->db->insert_id();
+						
+	}
+	function getcarreviewById($id){
+		$this->db->from($this->car_blog);
+		$this->db->where('id',$id);
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	
+	
+		function editcarreview($id){
+		$array = array();
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		
+		
+		if(!empty($_FILES['userfile']["name"])){
+		 $ext = pathinfo($_FILES['userfile']["name"]);
+			$fileName = rand().'-'.time().'.'.$ext['extension'];
+			$_FILES['userfile']["name"]= 'blog-'.$fileName;
+			//Upload Image
+			$config['upload_path'] = './assets/upload/gallary/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('userfile')){
+				$errors =  array('error' => $this->upload->display_errors());
+				$array['error'] = $errors;
+			}else{
+				$data =  array('upload_data' => $this->upload->data());
+				$this->resizeImage($_FILES['userfile']['name']);
+				$featured_img =  $_FILES['userfile']['name'];
+				
+			}
+		
+		}else{
+			$featured_img = $_POST['olduserfile'];
+		}	
+			
+		$data = array(
+							'featured_img' => $featured_img,
+							'title' => $_POST['title'],
+							'shortdescription' => $_POST['shortdescription'],
+							'description' => $_POST['description'],
+							'created_by' => $this->session->userdata('user_id')
+							
+						);
+
+		$this->db->where('id', $id);
+		return $this->db->update($this->car_blog, $data);
+	}
+	function deletereview(){
+		$id = $this->input->post('id');
+		$this->db->where('id', $id);
+		return $this->db->delete($this->car_blog);
+	}
+	
+	//
+	public function resizeImageofProfile($filename){
+	$source_path = $_SERVER['DOCUMENT_ROOT'] . '/carcompare/dev/assets/upload/profile/' . $filename;
+	$target_path = $_SERVER['DOCUMENT_ROOT'] . '/carcompare/dev/assets/upload/profile/thumbnail/';
+	 
+	// $source_path = './assets/img/portfolio/' . $filename;
+	 //$target_path =  './assets/img/portfolio/thumbnail/';
+
+      $config_manip = array(
+          'image_library' => 'gd2',
+          'source_image' => $source_path,
+          'new_image' => $target_path,
+          'maintain_ratio' => TRUE,
+          //'create_thumb' => TRUE,
+          //'thumb_marker' => '_thumb',
+          'width' => 150,
+          'height' => 150
+      );
+
+		$this->load->library('image_lib',$config_manip);
+		$this->image_lib->initialize($config_manip);
+      if (!$this->image_lib->resize()) {
+          echo $this->image_lib->display_errors();
+      }
+		$this->image_lib->clear();
+   }
+	public function editprofile(){
+        $this->db->where('id',$this->session->userdata('user_id'))->from($this->car_users);
+		$query = $this->db->get();
+		return $query->row_array();
+    }
+	
+	function updateprofile(){
+	    //echo "<pre>"; print_r($_POST); die;
+		$array = array();
+		set_time_limit(0);
+		ini_set('memory_limit', '-1');
+		if(!empty($_FILES['userfile']["name"])){
+		 $ext = pathinfo($_FILES['userfile']["name"]);
+			$fileName = rand().'-'.time().'.'.$ext['extension'];
+			$_FILES['userfile']["name"]= 'profile-'.$fileName;
+			//Upload Image
+			$config['upload_path'] = './assets/upload/profile/';
+			$config['allowed_types'] = 'gif|jpg|png';
+			
+			$this->load->library('upload', $config);
+			if(!$this->upload->do_upload('userfile')){
+				$errors =  array('error' => $this->upload->display_errors());
+				$array['error'] = $errors;
+			}else{
+				$data =  array('upload_data' => $this->upload->data());
+				$this->resizeImageofProfile($_FILES['userfile']['name']);
+				$featured_img =  $_FILES['userfile']['name'];
+				
+			}
+		
+		}else{
+			$featured_img = $_POST['olduserfile'];
+		}	
+			
+		$data = array(
+							'profile_image' => $featured_img,
+							'first_name' => $_POST['first_name'],
+							'last_name' => $_POST['last_name'],
+							'password' => md5($_POST['password']),
+							'plain_password' => $_POST['password'],
+							'user_company' => $_POST['company_name'],
+							'user_phone' => $_POST['phone'],
+							'user_website' => $_POST['website']
+							
+						);
+
+		$this->db->where('id', $this->session->userdata('user_id'));
+		return $this->db->update($this->car_users, $data);
+	}
+	
+	function unavailable(){
+		$data = array(
+		'unavailable' => $_POST['unavailable']
+		);
+		$this->db->where('id', $_POST['postid']);
+		return $result = $this->db->update($this->car_posts, $data);
+	
+    }
+	function available(){
+		$data = array(
+		'unavailable' => ''
+		);
+		$this->db->where('id', $_POST['id']);
+		return $result = $this->db->update($this->car_posts, $data);
+	
+    }
+	
+	/**
+	* Manage Corporate Accounts Start Here
+	*/
+	
+	 function corporate_users(){
+       $this->db->from($this->car_users);
+       $this->db->order_by("id", "desc");
+	   $this->db->where('user_type', 3);
+	   $query = $this->db->get();
+       return $query->result();
+    }
+	
+	function addcorporate(){
+		parse_str($_POST['formdata'], $searcharray);
+		$browser_id =session_id();
+		$this->db->where('user_email',$searcharray['useremail'])->from($this->car_users);
+		$query = $this->db->get();
+		$num = $query->num_rows();
+		if($num >0){
+			return 1;
+			
+		}else{
+			//$effectiveDate = $searcharray['timeperiod'];
+			//$effectiveDates = date('Y-m-d', strtotime("+1 months", strtotime($effectiveDate)));
+			$password = $searcharray['password'];
+			$data = array(
+							'first_name' => $searcharray['first_name'],
+							'last_name' => $searcharray['last_name'],
+							'user_email' => $searcharray['useremail'],
+							'password' => md5($searcharray['password']),
+							'plain_password' => $password,
+							'user_type' => 3,
+							'status' => 1,
+							'timeperiod' => $searcharray['timeperiod'],
+							'adverts' => $searcharray['adverts'],
+							'daysleft' => $searcharray['daysleft'],
+							'created_date' => date("Y-m-d H:i:s")
+						);
+						
+			$result = $this->db->insert($this->car_users, $data);
+			return 2;
+			//$lastID = $this->db->insert_id();
+			
+		}
+		
+	}	
+	
+
+	function editcorporate($id){
+	    //echo "<pre>"; print_r($_POST); die;
+		$id = base64_decode($id);
+		$data = array( 
+		'first_name' => $_POST['first_name'],
+		'last_name' => $_POST['last_name'],
+		'user_email' => $_POST['useremail'],
+		'timeperiod' => $_POST['timeperiod'],
+		'password' => md5($_POST['password']),
+		'plain_password' => $_POST['password'],
+		'status' => $_POST['status'],
+		'adverts' => $_POST['adverts'],
+		'daysleft' => $_POST['daysleft'],
+		);
+		$this->db->where('id', $id);
+		$this->db->update($this->car_users, $data);
+		$this->session->set_flashdata('success',"(". $_POST['first_name'].")". ' Corporate User has been updated succesfully');
+	}	
+	
+	public function activeUser(){
+		$id = $this->input->post('id');  
+		$data = array(
+					'status' => 1
+					);
+		$this->db->where('id', $id);
+		$result = $this->db->update($this->car_users, $data);
+		if($result){ return 1;}
+		  
+	}
+	
+	public function deactiveUser(){
+		$id = $this->input->post('id');
+		$data =  array(
+			'status' => 0
+		);
+		$this->db->where('id',$id);
+		$result = $this->db->update($this->car_users, $data);
+		if($result){ return 1; }
+	}
+	
+	function deletecorporateuser(){
+		$id = $this->input->post('id');
+		$this->db->where('user_id', $id);
+		$this->db->delete($this->car_posts);
+		$this->db->where('user_id', $id);
+		$this->db->delete($this->car_upload_images);
+		$this->db->where('id', $id);
+		$this->db->where('user_type', 3);
+		return $this->db->delete($this->car_users);
+	}
+	
+	function editUser($Userid){
+		$id = base64_decode($Userid);
+		$this->db->from('car_users');
+		$this->db->where('id',$id);
+		$this->db->where('user_type', 3);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+
+	/**
+	* Manage Corporate Accounts End Here
+	*/
+	
+	
+	function ForgotPassword($email){
+        $this->db->select('user_email,plain_password');
+        $this->db->from('car_users'); 
+        $this->db->where('user_email', $email); 
+        $query=$this->db->get();
+        return $query->row_array();
+    }
+	
+	
+}
+
+?>

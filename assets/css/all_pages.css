@@ -1,0 +1,74 @@
+/*Index page*/
+
+.footer-share-links i{padding-top: 11px;}
+.member-social-links i{padding-top: 11px;}
+#layerslider * {font-family: Lato, 'Open Sans', sans-serif;}
+.wrap_7ec .chatCopyright_88b{display:none !important;}
+.copy_c31 .logo_8b1{display:none;}
+.main-nav ul li .dropdown{background: #ffffff;}
+#header .dropdown-items > li{background: #ffffff;}
+#header.static-header .main-nav > ul > li > a,#header.box-header .box-header-wrap .main-nav > ul > li > a{color: #666;}
+#header .dropdown-items > li a{color: #666}
+
+    #header.static-header .main-nav > ul > li > a:hover,#header.box-header .box-header-wrap .main-nav > ul > li > a:hover{
+        color: #db2d2e;
+    }
+    #header .dropdown-items > li a:hover{
+        color: #db2d2e;        
+    }
+    #header.static-header .main-nav > ul > .active > a{border-bottom: 3px solid #000;}
+    #header .dropdown-items > .active a{
+        color: #111414        
+    }
+
+    .home-search-panel{
+        width: 100%;
+        padding: 20px !important;
+        border-top: 2px solid #bbb;
+        position: absolute;
+        top: 220px;
+        z-index: 999;
+        background: #fff !important;  
+        opacity: 0.9;
+            }
+
+/*Sell  Your Car Page*/
+ .top-bar{background: #222222;}
+    #form-map{background-color: #e5e3df;height: 200px;width: 100%;}
+    hr {border-top: 5px solid #fff;}
+    #form-map img { max-width: none; }
+    .py_20{padding:20px 0;}
+    .pt_40{padding-top:40px;}
+    .tab-content>.tab-pane {border: none;padding: 0;}
+     h4 {color: #333;text-align: center;padding-bottom:10px;}
+    .control-label {color: #333;font-weight: 500;}
+    .form-horizontal {background: #f0f0f0a3;padding: 40px;}
+    .form-control {margin-top: 15px;border-color: #3286bc;}
+    .form-control {margin-top: 15px;border-color: #3286bc;}
+    .btn.btn-primary:hover,.btn.btn-primary{background-color: #3286bc;}
+    .featured-img .upload-button {background: none repeat scroll 0 0 #3286bc;}
+    .alert-info {background-color: #3286bc;border-color: #3286bc;color: #fff;}
+    .alert-info a,.alert-info a:hover{color: #fff;}
+    top-bar.btn.btn-warning, .btn.btn-warning:hover, .btn.btn-warning:focus {background-color: #3286bc;}
+.bar{
+    background: none repeat scroll 0 0 #78a;
+    border-radius: 3px;
+    height: 17px;
+}
+.footer-share-links i{
+    padding-top: 11px;
+}
+.member-social-links i{
+    padding-top: 11px;    
+}
+
+.wrap_7ec .chatCopyright_88b
+{
+    display:none !important;
+}
+.copy_c31 .logo_8b1
+{
+    display:none;
+}
+
+

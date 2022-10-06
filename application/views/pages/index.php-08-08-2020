@@ -1,0 +1,298 @@
+   <!-- ========== TEXT SLIDER SECTION ========== -->
+         <section class="advanced-slider-wrapper">
+            <div class="container">
+               <div class="col-md-6 col-sm-8 col-xs-8">
+                  <div class="home-search-panel">
+                     <div class="re-big-form">
+                        <div class="nav-tabs-two search-panel-tab">
+                           <!-- Tab content -->
+                           <div class="tab-content">
+                              <div class="tab-pane fade in active" id="tab-1">
+                                 <form role="form" action="<?php echo base_url();?>vehicle/advresults" method="post" id="home-search-form">
+                                    <div class="row">
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label class="control-label">Location</label>
+                                             <select name="state" id="state" class="form-control  search-location filter-change">
+                                                
+												<option value="">Select Location</option>
+												<?php  foreach($carState as $value){?>
+												<option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
+												<?php } ?>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Advert Type</label>
+                                             <select name="advert_type" id="advert_type" class="form-control advert-type filter-change">
+                                                <option data-name="" value="">Select Advert Type</option>
+                                                <option value="sell">SELL</option>
+                                                <option  value="rent">RENT</option>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div style="clear:both"></div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Condition</label>
+                                             <select name="condition" id="condition" class="form-control car-condition filter-change">
+                                                <option  value="">Select Condition</option>
+                                                <option  value="new" >New</option>
+                                                <option value="used" >Used</option>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Car Brand</label>
+                                             <select name="brand" id="home-select-brand" class="form-control  car-brand filter-change">
+												<option value="">Select Brand</option>
+												<?php foreach($carBrandmodels as $value){?>
+												<option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
+												<?php } ?>
+												</select>
+                                          </div>
+                                       </div>
+                                       <div style="clear:both"></div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Car Model</label>
+                                             <select name="model" id="select-model" class="form-control model filter-change">
+                                                <option value="">Select Model</option>
+												<?php foreach($getBrand as $value){?>
+												<option value="<?php echo $value->id;?>"><?php echo $value->name;?></option>
+												<?php } ?>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-14">Car Category</label>
+											 <select id="input-14" name="category" class="form-control search-category filter-change">
+											 <option value="">Select Category</option>
+												 <?php  foreach($carCategories as $value){?>
+											<option value="<?php echo $value->id;?>"><?php echo $value->title;?></option>
+											<?php } ?>
+											 </select>
+                                          </div>
+                                       </div>
+                                       <div style="clear:both"></div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Fuel Type</label>
+                                             <select name="fuel_type" id="fuel_type" class="form-control fueltype filter-change">
+                                                <option value="">Select Fuel Type</option>
+                                                <option value="gas" >Gas</option>
+                                                <option value="diesel" >Disel</option>
+                                                <option value="petrol" >Petrol</option>
+                                                <option  value="octane" >Octane</option>
+                                                <option  value="electricity" >Electricity</option>
+                                                <option value="others" >Others</option>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group">
+                                             <label for="input-11">Mileage Range</label>
+                                             <select name="mileage_range" id="mileage_range" class="form-control mileage-range filter-change">
+												<option value="">Select Mileage</option>
+												<?php foreach($mileage as $key=>$value){ ?>
+												<option value="<?php echo $key;?>"><?php echo $value;?></option>
+												<?php }?>
+                                             </select>
+                                          </div>
+                                       </div>
+                                       <div style="clear:both"></div>
+                                       <div class="col-md-12 col-sm-12 col-xs-12">
+                                          <label>&nbsp;</label>
+                                          <div class="form-group">
+                                             <button type="submit" id="filter-search" class="btn btn-warning w-100"><i class="fa fa-search"></i>&nbsp; Search Cars <span id="countrec">(<?php echo $searchcount;?>)</span><span id="loading-img"><img  style="display:none;" id="homeloading" src="<?php echo base_url();?>assets/img/loader_2.gif"></span></button>
+											 
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </form>
+                                 <div class="col-md-12 text-right">
+                                    <a href="<?php echo base_url();?>advance-search" class="text-right" style="padding-left: 44%;color: #8484f7;"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Advanced Search</a>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            
+            <div class="banner">
+                <img src="<?php echo base_url();?>assets/img/banner_img.jpg" class="banner_img">
+            </div>
+         </section>
+         <!-- //End simple slider -- >
+            <!-- ========== PORTFOLIO SECTION ========== -->
+         <section id="portfolio" class="">
+            <div class="featured_box_section bg_gray">
+               <div class="container main-container">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <div class="featured_box">
+                           <div class="featured_icon"></div>
+                           <div class="featured_contant">
+                              <h3>SELL MY CAR</h3>
+                              <p>Make more money when you sell your car yourself.</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="featured_box">
+                           <div class="featured_icon"></div>
+                           <div class="featured_contant">
+                              <h3>TRADE MY CAR</h3>
+                              <p>Get an Instant Cash Offer and trade in or sell your...</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="featured_box">
+                           <div class="featured_icon"></div>
+                           <div class="featured_contant">
+                              <h3>VALUE MY CAR</h3>
+                              <p>Find out what your car is worth to an individual buyer or dealer.</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Container -->
+			<div class="container main-container">
+			   <div class="row">
+				  <div class="col-md-12 col-sm-12 col-xs-12 content-body">
+					 <div class="block-heading-two">
+						<h3>
+						   <span><i class="fa fa-clock-o"></i> Latest car deals</span>
+						   <div class="pull-right list-switcher" style="display: none;">
+							  <a target="recent-posts" href="show/recentposts_ajax/8/grid.html"><i class="fa fa-th "></i></a>
+							  <a target="recent-posts" href="show/recentposts_ajax/8/list.html"><i class="fa fa-th-list "></i></a>
+						   </div>
+						</h3>
+					 </div>
+					 <span class="recent-posts">
+						<div class="text-center grid-box">
+						<?php foreach($latestPost as $latestPost) {?>
+						
+						   <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+							  <div class="item grid-box-item">
+								<div class="image-style-one">
+								<a href="<?php echo base_url();?>viechle/<?php echo  base64_encode($latestPost->id);?>">
+								     <?php if(!empty($latestPost->featured_img)) {?>
+									   <img class="img-responsive" alt="test carrrrr" src="<?php echo base_url();?>assets/upload/gallary/<?php echo $latestPost->featured_img;?>">
+									 <?php } else { ?>
+									<img class="img-responsive" src="<?php echo base_url();?>assets/img/no-image.png"><?php 
+									 }
+									?>									   
+									</a>
+								 </div>
+								 <div class="grid-box-content">
+									<span class="price-tag" data-toggle="tooltip" data-placement="left" data-original-title="Featured">
+									<?php echo $latestPost->currency;?>&nbsp;<?php echo $latestPost->price;?> </span>
+									<span class="condition-tag new_condition rent_condition" data-toggle="tooltip" data-placement="left" data-original-title="Featured">
+									<?php echo ucfirst($latestPost->condition);?>                    </span>
+									<a class="b-tooltip" title="Coupe" href="<?php echo base_url();?>viechle/<?php echo  base64_encode($latestPost->id);?>">
+									   <img src="https://oxeenit.com/cardealer/uploads/car-icons/coupe.png" class="fa cat-img-small fa-car bg-orange">
+									</a>
+									<div class="cat-title"><?php echo ucfirst($latestPost->categoryName);?></div>
+									<h4 class="item-title"><a href="<?php echo base_url();?>viechle/<?php echo  base64_encode($latestPost->id);?>"><?php echo ucfirst($latestPost->title);?></a></h4>
+									<div class="bor bg-orange"></div>
+									<div class="row">
+									  <?php echo $latestPost->brandname;?> <?php echo $latestPost->modalname;?>              
+									</div>
+									<div class="row">
+									   <div class="col-xs-12 col-sm-12 col-md-12 info-dta"><i class="fa fa-tachometer"></i> : Up to <?php echo $latestPost->mileage;?> Miles</div>
+									</div>
+									<div class="row grid-rating-holder">
+									   <div class="col-xs-12 col-sm-12 col-md-12 info-dta info-price">
+										  <a href="#">
+										  <span class="stars "><i class="fa fa-star "></i><i class="fa fa-star "></i><i class="fa fa-star "></i><i class="fa fa-star "></i><i class="fa fa-star "></i></span>                        </a>
+									   </div>
+									</div>
+									<div class="clearfix"></div>
+								 </div>
+							  </div>
+						   </div>
+						<?php } ?>
+						
+						</div>
+					 </span>
+					 <div style="clear:both;margin-top:20px"></div>
+				  </div>
+			   </div>
+			</div>
+            <div class="container main-container py-30">
+                <hr>
+                <div class="row">
+                  <div class="col-md-6">
+                     <div class="buyer_section">
+                        <div class="row">
+                           <div class="col-md-8 section_heading">
+                              <h3>ARE YOU LOOKING FOR A CAR?</h3>
+                              <p>Search Our Inventory With Thousands Of Cars And More Cars Are Adding On Daily Basis.</p>
+                              <a href="#" class="btn btn-warning w-50">Become A Buyer</a>
+                           </div>
+                           <div class="col-md-4">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <div class="dealer_section">
+                        <div class="row">
+                           <div class="col-md-8 section_heading">
+                              <h3>DO YOU WANT TO SELL A CAR?</h3>
+                              <p>Search Our Inventory With Thousands Of Cars And More Cars Are Adding On Daily Basis.</p>
+                              <a href="#" class="btn btn-warning w-50">Become A Dealer</a>
+                           </div>
+                           <div class="col-md-4">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- Start News Section-->
+            <div class="container blog-one">
+               <div class="row">
+                  <div class="col-md-12 col-sm-12 col-xs-12">
+                     <!-- Blog item starts -->
+                     <div class="blog-one-item row">
+                        <!-- blog One Img -->
+                        <div class="blog-one-img col-md-3 col-sm-3 col-xs-12">
+                           <!-- Image -->
+                           <a href="post-detail/3/Lorem-ipsum-doller-sit-ametLorem-ipsum-doller-sit-amet.html"><img src="<?php echo base_url(); ?>uploads/thumbs/abt-audi-r81.jpg" alt="" class="img-responsive img-thumbnail" /></a>
+                        </div>
+                        <!-- blog One Content -->
+                        <div class="blog-one-content  col-md-9 col-sm-9 col-xs-12">
+                           <!-- Heading -->
+                           <h3><a href="post-detail/3/Lorem-ipsum-doller-sit-ametLorem-ipsum-doller-sit-amet.html">Lorem ipsum doller sit ametLorem ipsum doller sit amet</a></h3>
+                           <!-- Blog meta -->
+                           <div class="blog-meta">
+                              <!-- Date -->
+                              <i class="fa fa-calendar"></i>   Wed, Apr 04, 2018  <!-- updated on version 1.6 -->
+                              <!-- Author -->
+                              <i class="fa fa-user"></i>   Admin admin</a>
+                           </div>
+                           <!-- Paragraph -->
+                           <p>Lorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit ametLorem ipsum doller sit <a href="post-detail/3/Lorem-ipsum-doller-sit-ametLorem-ipsum-doller-sit-amet.html">View More</a></p>
+                        </div>
+                     </div>
+                     <!-- Blog item ends -->
+                     <ul class="pagination">
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <!-- End News Section-->
+         </section>
+         <!-- //End portfolio -->
+         <!-- ==========  SERVICES SECTION  ========== -->
+		
